@@ -8,10 +8,10 @@ Grant Picker
 
 ## Project Description:
 
-	Our project was to use an Altera DE2-115 FPGA to build a game. We chose to build a game similar to Frogger since it’s simple
-to control, yet still has enough action taking place to make the project interesting. The main challenges we faced included outputting
-to a VGA display, taking user input to control an object on the screen, having endless lines of moving traffic, and collision
-detection to determine player deaths and victories.
+	Our project was to use an Altera DE2-115 FPGA to build a game. We chose to build a game similar to Frogger since 
+it’s simple to control, yet still has enough action taking place to make the project interesting. The main challenges we faced
+included outputting to a VGA display, taking user input to control an object on the screen, having endless lines of moving traffic,
+and collision detection to determine player deaths and victories.
 
 ## Background Info:
 
