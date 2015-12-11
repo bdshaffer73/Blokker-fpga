@@ -3,7 +3,7 @@ A Frogger inspired road race through varying lanes of traffic.
 
 ECE 287 Project - Blokker
 
-Ben Shaffer
+Ben Shaffer,
 Grant Picker
 
 ## Project Description:
