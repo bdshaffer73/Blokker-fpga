@@ -6,31 +6,33 @@ ECE 287 Project - Blokker
 Ben Shaffer
 Grant Picker
 
-Project Description:
---------------------
+## Project Description:
+
 	Our project was to use an Altera DE2-115 FPGA to build a game. We chose to build a game similar to Frogger since it’s simple to control, yet still has enough action taking place to make the project interesting. The main challenges we faced included outputting to a VGA display, taking user input to control an object on the screen, having endless lines of moving traffic, and collision detection to determine player deaths and victories.
 
-Background Info:
-----------------
-Blokker was built in Verilog HDL, a form of code that directly describes logic gate organization to achieve a goal. The code was compiled in Altera Quartus II v14.0, and deployed to an Altera DE2-115 FPGA. Input to the FPGA utilized 4 buttons that were available on the DE2 board. Output from the FPGA was sent via VGA protocol to a 1280x1024 display. The name was chosen due to the game actors’ rectangular nature and similarity to Frogger.
+## Background Info:
 
-Construction:
--------------
+	Blokker was built in Verilog HDL, a form of code that directly describes logic gate organization to achieve a goal. The code was compiled in Altera Quartus II v14.0, and deployed to an Altera DE2-115 FPGA. Input to the FPGA utilized 4 buttons that were available on the DE2 board. Output from the FPGA was sent via VGA protocol to a 1280x1024 display. The name was chosen due to the game actors’ rectangular nature and similarity to Frogger.
+
+## Construction:
+
 	To build Blokker, we first needed to output to a VGA display. A VGA display creates images by assigning red, blue and green color values to each pixel. It starts with the top-most line of pixels, assigning from left to right, until it reaches the right-most pixel. Then it moves to the next line down and assigns pixels in the same order, left to right. Once it reaches the last pixel on the bottom row, it moves back to the top row. All pixels on the screen receive an assignment 60 times per second. Sixty hertz allows the display to trick the eye into seeing motion, which allows for animation and video.
 To assign each pixel, the VGA needs to receive data in a specific pattern. First, there’s a brief period of waiting called the “front porch.” Then the FPGA outputs a sync pulse to sync the display’s clock with the output clock. Another wait period, the “back porch,” follows, and finally pixel data is sent to the display. Since this process requires a large amount of code and understanding of the hardware involved, we chose to use the VGA controller from a previous project done by Patryk Giza and Zach Morgan to save time, and so we could focus more on the other mechanics of our game.
+
 	The VGA controller receives the X and Y coordinates of each pixel to be assigned, along with the RGB color values and a clock signal. Displaying anything involves using logic to dynamically choose the color of the pixel being assigned. To show a game, that logic needs input from the player(s) and information on the game objects. In Blokker, our logic broke down into several sets of simple pieces. First, each game object is described by its boundaries, so any pixel being assigned within that object gets colors based on that object. For example, when a pixel within Blokker’s boundaries is being assigned, Blokker is the first game object with a true state at that location and so the pixel is assigned Blokker’s color, green. This process is repeated for each game object. When objects overlap, such as Blokker on the background, the object shown is determined from sequential priority, where pixels are assigned the color value of the more important object. Blokker’s color assignment has priority over all others, since Blokker must be visible at all times. Vehicles entering or leaving the play area should not be seen, so the black bars on the sides have the next highest priority, “covering up” the vehicles where they disappear and reappear.  Next priority goes to the vehicles, and lastly to the background colors.
-The black sidebars also help produce the illusion of endless traffic lines. As mentioned before, the display outputs static images at a constant rate. Using this to our advantage, we set the vehicles to move in a such a way that when the first one reaches the edge of the screen, all are set back so that they replace each other during motion without skipping, giving the appearance of constant motion. Instead of needing to continually generate new cars, we only needed to use 6 permanent ones.
+
+	The black sidebars also help produce the illusion of endless traffic lines. As mentioned before, the display outputs static images at a constant rate. Using this to our advantage, we set the vehicles to move in a such a way that when the first one reaches the edge of the screen, all are set back so that they replace each other during motion without skipping, giving the appearance of constant motion. Instead of needing to continually generate new cars, we only needed to use 6 permanent ones.
 Blokker has the ability to move in 8 directions: Left, Right, Up, Down, Left-Up, Right-Up, Left-Down, Right-Down. To input the signals necessary for any of these movements, we needed 4 keys. Four keys are conveniently built onto the DE2 board already, so we used those.
 Finally, collisions are important in a game about traffic accidents and giant blocky frogs. Collision detection ended up being much simpler than we expected; Blokker is the only object that can collide with something, so any collision would be a case where Blokker’s boundaries overlap with another object’s. By defining the game’s reaction to Blokker “colliding” with another object, we were able to set up play area boundaries to prevent the player from escaping, enable roadkill, and have a winning zone. If Blokker encounters a boundary, he is set back 1 pixel in the opposite direction of attempted movement. If Blokker collides with a car or reaches the “victory” space unharmed, he is returned to his starting location at the bottom of the play area.
 
-Conclusion:
------------
+## Conclusion:
+
 	By completing this project, we utilized hardware description to build a machine that can play a pretty basic game, but one which has much room for additions and improvements.  We learned about how intricate VGA displays are, how to control pixels, and how to use logic to determine macroscopically what the colors each pixel should be assigned. 
 Things we could have changed:
 We didn’t design a Finite State Machine to build Blokker, so there are several places in the code that this could have been implemented where it likely would have made the code more efficient.  Several additional features were planned, but removed or remained unimplemented due to time constraints.  We put some work into building an audio module, consisting of an Arduino with a small speaker that could play tunes based on input from the DE2’s general purpose outputs. The Arduino side of this feature worked, but took too much time to interface with the FPGA. We also considered interfacing with a PS/2 type keyboard for more user-friendly input and more potential for expansion, but this also proved too time-consuming. Score counters, a life system, and a way to make the game progressively harder as time went on would have made it more interesting, and gone a long way to make the game feel more complete.
 
-Citations:
-----------
+## Citations:
+
 All VGA output code was borrowed from Patryk and Zach’s project. Link to Patryk and Zach’s repository: https://code.google.com/p/fpga-pong/source/browse/
 
 Some of the input code and structural code was also borrowed from their project since it worked with what we were designing. 
